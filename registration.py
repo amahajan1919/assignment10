@@ -389,7 +389,52 @@ class Graph:
         courses = []
 
         # TODO: Add code here. You may delete this comment when you are done.
+        self.compute_depth()
+        prereqs = [0] * len(self.vertices)
+        
+        for i in range(len(self.vertices)):
+            for j in range(len(self.vertices)):
+                if self.adjacency_matrix[i][j] == 1:
+                    prereqs[j] += 1
 
+        available_courses = BinaryHeap()
+
+        # Add courses with no prereqs to available courses
+        for i in range(len(self.vertices)):
+            if prereqs[i] == 0:
+                available_courses.insert((-self.vertices[i].depth, i))
+
+        # Track courses as we take them
+        taken_courses = [False] * len(self.vertices)
+
+        while not all(taken_courses):
+            sem_courses = []
+            next_sem = []
+            added = 0
+
+            while not available_courses.is_empty() and added < 4:
+                course = available_courses.delete()
+
+                if taken_courses[course[1]]:
+                    continue
+
+                sem_courses.append(self.vertices[course[1]].label)
+                taken_courses[course[1]] = True
+                added += 1
+
+                for j in range(len(self.vertices)):
+                    if self.adjacency_matrix[course[1]][j] == 1:
+                        prereqs[j] -= 1
+                    if prereqs[j] == 0 and not taken_courses[j]:
+                        next_sem.append((-self.vertices[j].depth, j))
+
+            for item in next_sem:
+                available_courses.insert(item)
+
+            if sem_courses:
+                courses.append(sem_courses)
+            else:
+                break
         return courses
 
 
@@ -404,12 +449,22 @@ def main():
     graph = Graph()
 
     # read the number of vertices
+    num_vertices = int(input())
 
     # read the vertices and add them into the graph
-
+    for _ in range(num_vertices):
+        graph.add_vertex(input())
     # read the number of edges
+    num_edges = int(input())
 
     # read the edges and insert them into the graph
+    for _ in range(num_edges):
+    classes = input().split()
+
+    start = graph.get_index(classes[0])
+    end = graph.get_index(classes[1])
+    graph.add_edge(start, end)
+    
     # you will need to call the method to convert them from their labels to their index
 
     ####################################################################################
