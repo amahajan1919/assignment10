@@ -452,6 +452,8 @@ class Graph:
                 for j in range(len(self.vertices)):
                     if self.adjacency_matrix[course[1]][j] == 1:
                         prereqs[j] -= 1
+
+                for j in range(len(self.vertices)):
                     if prereqs[j] == 0 and not taken_courses[j]:
                         next_sem.append((-self.vertices[j].depth, j))
 
@@ -485,10 +487,9 @@ def main():
     # read the edges and insert them into the graph
     for _ in range(num_edges):
         classes = input().split()
-
-    start = graph.get_index(classes[0])
-    end = graph.get_index(classes[1])
-    graph.add_edge(start, end)
+        start = graph.get_index(classes[0])
+        end = graph.get_index(classes[1])
+        graph.add_edge(start, end)
 
     # you will need to call the method to convert them from their labels to their index
 
@@ -509,3 +510,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
